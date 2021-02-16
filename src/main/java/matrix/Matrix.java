@@ -14,6 +14,9 @@ public class Matrix {
     private int row;
     private int col;
 
+    private String state = "";
+    private String solution = "";
+
     /**
      * Constructor for Matrix class that lets the user input the elements <p>
      * Author: Samuel Bazinet
@@ -256,5 +259,34 @@ public class Matrix {
         }
 
         return (1.0 / val);
+    }
+
+    /**
+     * Author: Liam Turcotte
+     * @param state
+     */
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    /**
+     * Author: Liam Turcotte
+     */
+    public void setSolution(String solution) {
+        this.solution = solution;
+    }
+
+    /**
+     * Author: Liam Turcotte
+     */
+    public String getState() {
+        return this.state;
+    }
+
+    /**
+     * Author: Liam Turcotte
+     */
+    public String getSolution() {
+        return this.solution;
     }
 }

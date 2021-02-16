@@ -17,6 +17,9 @@ public class Main extends Application {
         primaryStage.setTitle("Matrix Calculator");
         primaryStage.setScene(new Scene(root, 900, 600));
         primaryStage.show();
+
+        // WHEN CLICK BUTTON, CREATE NEW SCENE (and new fxml file?)
+
     }
 
 

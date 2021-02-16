@@ -18,6 +18,7 @@ public class GaussJordan {
     private static int numRows;
     private static int numColumns;
 
+    /*
     public static void main(String[] args) {
         double defaultMatrix[][] = {{1, 3, -2, 1, 1}, {2, 4, -2, -1, 5}, {0, 3, -3, 6, 9}};
         //double defaultMatrix[][] = {{1, -1, 2, -1, -1}, {2, 1, -2, -2, -2}, {-1, 2, -4, 1, 1}, {3, 0, 0, -3, -3}};
@@ -26,6 +27,14 @@ public class GaussJordan {
         numColumns = matrix.getColSize();
 
         conductGaussJordan();
+    } */
+    public static Matrix solve(Matrix matrixEntered) {
+        matrix = matrixEntered;
+        numRows = matrix.getRowSize();
+        numColumns = matrix.getColSize();
+
+        conductGaussJordan();
+        return matrix;
     }
 
     private static void conductGaussJordan() {
@@ -94,6 +103,7 @@ public class GaussJordan {
         }
 
         System.out.println("System is now in reduced row echelon form."); // no need to check, for sure good
+        matrix.setState("System is now in reduced row echelon form.");
 
         // check if system is consistent or not, provide solution
         if (checkZeroSolutions()) {
@@ -263,6 +273,7 @@ public class GaussJordan {
                 // if last entry of row is not 0, then there are 0 solutions
                 if (matrix.getEntryAt(i, numColumns - 1) != 0.0) {
                     System.out.println("The system is inconsistent; there are zero solutions.");
+                    matrix.setState(matrix.getState() + "\nThe system is inconsistent; there are zero solutions.");
                     return true;
                 }
 
@@ -285,6 +296,7 @@ public class GaussJordan {
         // more variables than equations
         if ((numColumns - 1) > numRows) {
             System.out.println("System is consistent with infinite solutions.");
+            matrix.setState(matrix.getState() + "\nSystem is consistent with infinite solutions.");
             return true;
         }
 
@@ -300,6 +312,7 @@ public class GaussJordan {
             if (zeroCount == numColumns) {
                 // infinite solutions
                 System.out.println("System is consistent with infinite solutions.");
+                matrix.setState(matrix.getState() + "\nSystem is consistent with infinite solutions.");
                 return true;
             }
             else {
@@ -318,6 +331,7 @@ public class GaussJordan {
         double difference = 0;
 
         System.out.println("System has a unique solution:");
+        matrix.setState(matrix.getState() + "\nSystem has a unique solution:");
         for (int i = 0; i < numRows; i++) {
             if (i >= numColumns - 1) {
                 break;
@@ -327,9 +341,11 @@ public class GaussJordan {
                 // number is an integer, convert to int/long to remove .0 decimal
                 // f. ex. -1.0 becomes -1
                 System.out.println("x" + (i+1) + ": " + Math.round(matrix.getEntryAt(i, numColumns-1)));
+                matrix.setSolution(matrix.getSolution() + "x" + (i+1) + ": " + Math.round(matrix.getEntryAt(i, numColumns-1)) + "\n");
             }
             else {
                 System.out.println("x" + (i+1) + ": " + matrix.getEntryAt(i, numColumns-1));
+                matrix.setSolution(matrix.getSolution() + "x" + (i+1) + ": " + matrix.getEntryAt(i, numColumns-1) + "\n");
             }
         }
 
@@ -370,6 +386,7 @@ public class GaussJordan {
             }
             else {
                 System.out.println("x" + (i+1) + ": free");
+                matrix.setSolution(matrix.getSolution() + "x" + (i+1) + ": free" + "\n");
             }
         }
 
@@ -377,6 +394,7 @@ public class GaussJordan {
         for (int i = 0; i < variables.length; i++) {
             if (variables[i]) {
                 System.out.println(definedVariableExpressions[i]);
+                matrix.setSolution(matrix.getSolution() + definedVariableExpressions[i] + "\n");
             }
         }
     }
