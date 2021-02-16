@@ -2,6 +2,9 @@ package main.java.matrix;
 
 import java.util.Scanner;
 
+/**
+ * Main contributor: Samuel Bazinet
+ */
 public class Matrix {
 
     private double matrix[][];
@@ -9,7 +12,8 @@ public class Matrix {
     private int col;
 
     /**
-     * Constructor for Matrix class that lets the user input the elements
+     * Constructor for Matrix class that lets the user input the elements <p>
+     * Author: Samuel Bazinet
      * @param row : the amount of rows in the matrix
      * @param col : the amount of columns in the matrix
      */
@@ -24,7 +28,8 @@ public class Matrix {
     }
 
     /**
-     * Constructor for Matrix class that creates a 0 matrix
+     * Constructor for Matrix class that creates a 0 matrix <p>
+     * Author: Samuel Bazinet
      * @param row : the amount of rows in the matrix
      * @param col : the amount of columns in the matrix
      * @param def : used to differentiate this constructor from the user filled one
@@ -42,7 +47,8 @@ public class Matrix {
     }
 
     /**
-     * Constructor for Matrix class that converts an array to a Matrix
+     * Constructor for Matrix class that converts an array to a Matrix <p>
+     * Author: Samuel Bazinet
      * @param ar : the array to be converted
      */
     public Matrix(double[][] ar) {
@@ -55,7 +61,8 @@ public class Matrix {
     }
 
     /**
-     * setMat() is used to fill an array using user inputed values from the terminal
+     * setMat() is used to fill an array using user inputed values from the terminal <p>
+     * Author: Samuel Bazinet
      */
     private void setMat() {
         Scanner scan = new Scanner(System.in);
@@ -68,16 +75,35 @@ public class Matrix {
         //scan.close();
     }
 
-    public void setEntry(int row, int col, double el) {
-        matrix[row][col] = el;
+    /**
+     * Change the content of one of the entries of the matrix <p>
+     * Author: Samuel Bazinet 
+     * @param rowIndex
+     * @param colIndex
+     * @param newEntry
+     */
+    public void setEntry(int rowIndex, int colIndex, double newEntry) {
+        matrix[rowIndex][colIndex] = newEntry;
     }
 
+    /**
+     * Change an entire row of the matrix <p>
+     * Author: Samuel Bazinet
+     * @param row
+     * @param newRow
+     */
     public void setRow(int row, double[] newRow) {
         for (int i = 0; i < this.col; i++) {
             matrix[row][i] = newRow[i];
         }
     }
 
+    /**
+     * Change an entire column of the matrix <p>
+     * Author: Samuel Bazinet
+     * @param col
+     * @param newCol
+     */
     public void setCol(int col, double[] newCol) {
         for (int i = 0; i < this.row; i++) {
             matrix[i][col] = newCol[i];
@@ -87,10 +113,22 @@ public class Matrix {
     public int getRowSize() {return this.row;}
     public int getColSize() {return this.col;}
 
+    /**
+     * Get a row of the matrix as an array <p>
+     * Author: Samuel Bazinet
+     * @param row
+     * @return
+     */
     public double[] getRow(int row) {
         return matrix[row];
     }
 
+    /**
+     * Get a column of the matrix as an array <p>
+     * Author: Samuel Bazinet
+     * @param col
+     * @return
+     */
     public double[] getCol(int col) {
         double out[] = new double[this.row];
 
@@ -133,6 +171,24 @@ public class Matrix {
         for (int i = 0; i < col; i++) {
             matrix[row2Index][i] = row1Copy[i];
         }
+    }
+
+    /**
+     * Swap 2 columns of the matrix <p>
+     * Author: Samuel Bazinet
+     * @param col1Index
+     * @param col2Index
+     */
+    public void swapColumns(int col1Index, int col2Index) {
+        // copy the first column
+        double[] temp = this.getCol(col1Index);
+
+        // put the second column in the first one's place
+        this.setCol(col1Index, this.getCol(col2Index));
+
+        // put the first column in the second one's place
+        this.setCol(col2Index, temp);
+
     }
 
     /**
