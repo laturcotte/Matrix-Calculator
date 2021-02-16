@@ -1,10 +1,13 @@
+/**
+ * Matrix toolbox
+ * 
+ * Main contributor: Samuel Bazinet
+ * Last modification: February 15 2021
+ */
 package main.java.matrix;
 
 import java.util.Scanner;
 
-/**
- * Main contributor: Samuel Bazinet
- */
 public class Matrix {
 
     private double matrix[][];
