@@ -6,6 +6,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import main.java.matrix.Matrix;
+import main.java.matrix.modules.*;
+
 public class Main extends Application {
 
     @Override
