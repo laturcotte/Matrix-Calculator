@@ -1,7 +1,7 @@
 /**
  * Matrix toolbox
  * 
- * Main contributor: Samuel Bazinet
+ * Authors: Liam Turcotte, Samuel Bazinet
  * Last modification: February 15 2021
  */
 package main.java.matrix;
