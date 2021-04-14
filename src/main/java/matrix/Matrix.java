@@ -197,6 +197,15 @@ public class Matrix {
 
     }
 
+    public void negative() {
+        for (int i = 0; i < this.row; i++) {
+            for (int j = 0; j < this.col; j++) {
+                this.setEntry(i, j, -this.getEntryAt(i,j));
+            }
+        }
+
+    }
+
     /**
      * Author: Liam Turcotte
      * @return
