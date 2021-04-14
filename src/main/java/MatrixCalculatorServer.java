@@ -21,7 +21,7 @@ public class MatrixCalculatorServer {
             // Connecting the server
             serverSocket = new ServerSocket(SERVER_PORT);
             System.out.println("---------------------------");
-			System.out.println("Chat Server Application is running");
+			System.out.println("Matrix Calculator Application is running");
 			System.out.println("---------------------------");
 			System.out.println("Listening to port: "+SERVER_PORT);
 			handler = new MatrixCalculatorThread[MAX_CLIENTS];

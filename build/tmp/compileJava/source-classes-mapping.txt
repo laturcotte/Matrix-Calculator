@@ -10,3 +10,8 @@ MatrixCalculatorServer.java
  main.java.MatrixCalculatorServer
 matrix/Matrix.java
  main.java.matrix.Matrix
+MatrixCalculatorClient.java
+ main.java.MatrixCalculatorClient
+ main.java.MatrixCalculatorClient$1
+ main.java.MatrixCalculatorClient$2
+ main.java.MatrixCalculatorClient$3
