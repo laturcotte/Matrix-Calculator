@@ -29,7 +29,7 @@ public class ScalarMultiplication {
      * @param scalar
      * @return A matrix multiplied by a scalar
      */
-    public static Matrix scalarMultiplication(Matrix matrix, int scalar) {
+    public static Matrix scalarMultiplication(Matrix matrix, double scalar) {
         
         int numRows = matrix.getRowSize();
         int numCols = matrix.getColSize();

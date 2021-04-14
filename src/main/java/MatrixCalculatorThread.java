@@ -94,7 +94,7 @@ public class MatrixCalculatorThread extends Thread {
      */
     protected boolean processCommand(String command, String arguments) {
 
-        // This command processes the 
+        // This command processes the GAUSSJORD command
         if (command.equalsIgnoreCase("GAUSSJORD")) {
 
             String[] dim = arguments.split(" ");
@@ -130,10 +130,58 @@ public class MatrixCalculatorThread extends Thread {
             }
 
             Matrix solvedMatrix = GaussJordan.solve(new Matrix(arrayMatrix));
-
+            out.println(solvedMatrix.getSolution());
+            /*
             for (int i = 0; i < solvedMatrix.getRowSize(); i++) {
                 for (int j = 0; j < solvedMatrix.getColSize(); j++) {
                     out.println(solvedMatrix.getEntryAt(i, j));
+                }
+            } 
+            */
+
+            return true;
+
+        } else if (command.equalsIgnoreCase("SCALARMUL")) {
+
+            String[] dim = arguments.split(" ");
+            double[][] arrayMatrix = null;
+            double scalar = 0;
+
+            // We get and set the size of the matrix
+            if (dim.length == 2) {
+                arrayMatrix = new double[Integer.parseInt(dim[0])][Integer.parseInt(dim[1])];
+                scalar = Double.parseDouble(dim[2]);
+            } else {
+                out.println("400 Not enough arguments provided");
+                return true;
+            }
+
+            String inContent = null;
+            // We fill the matrix
+            for (int i = 0; i < arrayMatrix.length; i++) {
+                for (int j = 0; j < arrayMatrix[i].length; i++) {
+
+                    try {
+                        inContent = in.readLine();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (null == inContent) {
+                        out.println("400 no number provided");
+                        return true;
+                    }
+
+                    arrayMatrix[i][j] = Double.parseDouble(inContent);
+
+                }
+            }
+
+            Matrix outMatrix = ScalarMultiplication.scalarMultiplication(new Matrix(arrayMatrix), scalar);
+
+            for (int i = 0; i < outMatrix.getRowSize(); i++) {
+                for (int j = 0; j < outMatrix.getColSize(); j++) {
+                    out.println(outMatrix.getEntryAt(i, j));
                 }
             } 
 
