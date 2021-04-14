@@ -71,30 +71,35 @@ public class MatrixCalculatorClient extends Application {
         // create Gauss Jordan tab
         initializeGaussJordanTab();
 
+        // set the main scene
         mainPane.setCenter(modulePane);
-        //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Matrix Calculator");
         primaryStage.setScene(mainScene);
         primaryStage.show();
     }
 
+    /**
+     * Initialize the welcome tab.
+     * Includes welcome message, matrix image, and a button which leads to a
+     * new stage that displays Wikipedia links to the module articles.
+     */
     public void initializeWelcomeTab() {
         // create the welcome screen/pane
         BorderPane welcomePane = new BorderPane();
 
+        // create the title message, put at the top/center
         BorderPane welcomeTitlePane = new BorderPane();
         Text welcomeText = new Text("Welcome to the Matrix Calculator!");
         welcomeText.setId("welcomeTitle");
         welcomeTitlePane.setCenter(welcomeText);
         welcomePane.setTop(welcomeTitlePane);
 
-        // add image
+        // add image, put at the center
         GridPane imagePane = new GridPane();
         imagePane.setAlignment(Pos.CENTER);
         imagePane.setHgap(10);
         imagePane.setVgap(10);
         imagePane.setPadding(new Insets(20, 20, 20, 20));
-
         imagePane.setId("imagePane");
 
         // get image from path, stored in src/main/images
@@ -107,6 +112,8 @@ public class MatrixCalculatorClient extends Application {
         imagePane.getChildren().add(matrixImageView);
         welcomePane.setCenter(imagePane);
 
+        // Add a button to the bottom/center
+        // when clicked, it will show a new window with the links
         BorderPane learnButtonPane = new BorderPane();
         learnButtonPane.setPadding(new Insets(20, 20, 20, 20));
         Button learnMoreButton = new Button("Learn more about these modules");
@@ -121,12 +128,17 @@ public class MatrixCalculatorClient extends Application {
         learnButtonPane.setCenter(learnMoreButton);
         welcomePane.setBottom(learnButtonPane);
 
+        // add the tab
         Tab welcomeTab = new Tab("Welcome", welcomePane);
         welcomeTab.setClosable(false);
         modulePane.getTabs().add(welcomeTab);
     }
 
+    /**
+     * Displays the module Wikipedia links in a new window.
+     */
     public void displayLinksStage() {
+        // initialize stage
         Stage linksStage = new Stage();
         linksStage.setTitle("Wiki links of the modules");
 
@@ -138,24 +150,33 @@ public class MatrixCalculatorClient extends Application {
         Label gaussJordanLabel = new Label("Gauss Jordan:");
         Hyperlink gaussJordanWiki = new Hyperlink("https://en.wikipedia.org/wiki/Gaussian_elimination");
 
+        // add label and link for each module
         linksPane.add(gaussJordanLabel, 1, 1);
         linksPane.add(gaussJordanWiki, 2, 1);
 
+        // show the scene
         Scene linkScene = new Scene(linksPane, 400, 300);
         linksStage.setScene(linkScene);
         linksStage.show();
     }
 
+    /**
+     * Creates the Gauss-Jordan tab.
+     * User will be able to select their matrix size.
+     * Leads to the calculator window.
+     */
     public void initializeGaussJordanTab() {
         // create the Gauss-Jordan screen
         BorderPane gaussPane = new BorderPane();
 
+        // set the title at the top/center
         BorderPane gaussTitlePane = new BorderPane();
         gaussTitlePane.setPadding(new Insets(10, 10, 10, 10));
         Label gaussLabel = new Label("Gauss-Jordan matrix solver");
         gaussLabel.setId("moduleTitle");
         gaussTitlePane.setCenter(gaussLabel);
 
+        // show a short description about Gauss-Jordan method
         String message = "\n\nComputes the Reduced Row Echelon Form of a matrix to "
                 + "solve a system of linear equations.";
         Text goalOfGJ = new Text(message);
@@ -163,13 +184,18 @@ public class MatrixCalculatorClient extends Application {
         gaussTitlePane.setBottom(goalOfGJ);
         gaussPane.setTop(gaussTitlePane);
 
+        // set the matrix dimension pane in the center
         GridPane gjMatrixPane = new GridPane();
         gjMatrixPane.setAlignment(Pos.CENTER);
         gjMatrixPane.setHgap(10);
         gjMatrixPane.setVgap(10);
         gjMatrixPane.setPadding(new Insets(20, 20, 20, 20));
+
+        // instruction label
         Label gjMatrixInstructions = new Label("Please enter matrix dimensions:");
         gjMatrixInstructions.setId("matrixDimText");
+
+        // create first choice box to choose number of rows
         ChoiceBox<String> box1 = new ChoiceBox<>();
         box1.getItems().add("2");
         box1.getItems().add("3");
@@ -178,8 +204,10 @@ public class MatrixCalculatorClient extends Application {
         box1.getItems().add("6");
         box1.setValue("2"); // default/initial value
 
+        // between choice boxes for aesthetics
         Text xText = new Text("x");
 
+        // create second choice box for number of columns
         ChoiceBox<String> box2 = new ChoiceBox<>();
         box2.getItems().add("3");
         box2.getItems().add("4");
@@ -188,6 +216,7 @@ public class MatrixCalculatorClient extends Application {
         box2.getItems().add("7");
         box2.setValue("3"); // default/initial value
 
+        // create submission button
         Button gjSubmitButton = new Button("Submit");
         gjSubmitButton.setId("button");
         gjSubmitButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -197,6 +226,7 @@ public class MatrixCalculatorClient extends Application {
             }
         });
 
+        // add all elements
         gjMatrixPane.add(gjMatrixInstructions, 0, 1);
         gjMatrixPane.add(box1, 1, 1);
         gjMatrixPane.add(xText, 2, 1);
@@ -214,16 +244,13 @@ public class MatrixCalculatorClient extends Application {
     // need to take into account module name, allowed matrix sizes, (how many matrices)
     // another function for 2 matrix operations? like mul, add
     public void displayGaussJordanMatrixStage(ChoiceBox<String> box1, ChoiceBox<String> box2) {
+        // get the row/
         String stringedNumRows = box1.getValue();
         String stringedNumColumns = box2.getValue();
 
+        //
         int numRows = Integer.parseInt(stringedNumRows);
         int numColumns = Integer.parseInt(stringedNumColumns);
-
-        // make borderpane
-        // top: another borderpane to center title like "enter matrix for gauss jord"
-        // middle: matrix and submit button
-        // bottom: solution
 
         BorderPane matrixPane = new BorderPane();
 
@@ -334,6 +361,9 @@ public class MatrixCalculatorClient extends Application {
         tableMatrix.show();
     }
 
+    /**
+     * Launch the program.
+     */
     public static void main(String[] args) {
         launch(args);
     }
