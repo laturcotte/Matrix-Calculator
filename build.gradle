@@ -22,6 +22,15 @@ task startServer(type: JavaExec) {
 }
 
 
+//sourceSets {
+    //main {
+        //resources {
+            //srcDirs = ["src/main/css"]
+            //includes = ["**/*.css"]
+        //}
+    //}
+//}
+
 dependencies {
 }
 

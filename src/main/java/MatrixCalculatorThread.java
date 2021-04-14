@@ -104,7 +104,7 @@ public class MatrixCalculatorThread extends Thread {
             double[][] arrayMatrix = null;
 
             // We get and set the size of the matrix
-            if (dim.length == 2) {
+            if (dim.length <= 2) {
                 arrayMatrix = new double[Integer.parseInt(dim[0])][Integer.parseInt(dim[1])];
             } else {
                 out.println("400 Not enough arguments provided");
@@ -114,7 +114,7 @@ public class MatrixCalculatorThread extends Thread {
             String inContent = null;
             // We fill the matrix
             for (int i = 0; i < arrayMatrix.length; i++) {
-                for (int j = 0; j < arrayMatrix[i].length; i++) {
+                for (int j = 0; j < arrayMatrix[i].length; j++) {
 
                     // We wait for the client to send each member of the matrix
                     // One entry at a time, row by row
@@ -137,7 +137,7 @@ public class MatrixCalculatorThread extends Thread {
 
             // We return the solution of the linear system
             Matrix solvedMatrix = GaussJordan.solve(new Matrix(arrayMatrix));
-            out.println(solvedMatrix.getSolution());
+            out.println(solvedMatrix.getState() + "\n" + solvedMatrix.getSolution());
             /*
             for (int i = 0; i < solvedMatrix.getRowSize(); i++) {
                 for (int j = 0; j < solvedMatrix.getColSize(); j++) {

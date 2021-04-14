@@ -18,8 +18,7 @@ import javafx.stage.Stage;
 import main.java.matrix.Matrix;
 import main.java.matrix.modules.*;
 
-import java.io.BufferedReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 /**
@@ -53,10 +52,16 @@ public class MatrixCalculatorClient extends Application {
     private TabPane modulePane;
 
     // path to style sheet to customize elements
-    String pathToStyleSheet = getClass().getResource("..\\css\\stylingelements.css").toExternalForm();
+    //String pathToStyleSheet = getClass().getResource("..\\css\\stylingelements.css").toExternalForm();
+    //String pathToStyleSheet = getClass().getResource(".\\src\\main\\css\\stylingelements.css").toExternalForm();
+    //String pathToStyleSheet = "file:\\" + System.getProperty("user.dir") + "\\src\\main\\css\\stylingelements.css";
+    //String pathToStyleSheet = getClass().getResource(System.getProperty("user.dir") + "\\src\\main\\css\\stylingelements.css").toExternalForm();
+    //String pathToStyleSheet = new File(System.getProperty("user.dir") + "/src/main/images/matrix.png").toURI().toString();
+    String pathToStyleSheet = "file:/" + System.getProperty("user.dir").replace("\\", "/") + "/src/main/css/stylingelements.css";
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        System.out.println(pathToStyleSheet);
         // initialize main pane
         mainPane = new BorderPane();
         Scene mainScene = new Scene(mainPane, 900, 600);
@@ -76,6 +81,43 @@ public class MatrixCalculatorClient extends Application {
         primaryStage.setTitle("Matrix Calculator");
         primaryStage.setScene(mainScene);
         primaryStage.show();
+    }
+
+    /**
+     * Connect to new socket tied to server address and port.
+     * The client will connect to the server every time a command is entered.
+     */
+    public void connectToServer() {
+        // connect to the socket
+        try {
+            socket = new Socket(computerName, serverPort);
+        } catch (IOException error) {
+            System.err.println("Problem while connecting to server");
+        }
+
+        if (null == socket) {
+            System.err.println("no socket");
+        }
+
+        try {
+            // get input and output stream from the server
+            // true -> auto-flush buffer at the end of every println
+            networkInput = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            networkOutput = new PrintWriter(socket.getOutputStream(), true);
+        } catch (IOException error) {
+            System.err.println("input/output exception while opening connection");
+        }
+    }
+
+    /**
+     * Closes the socket, called after each command.
+     */
+    public void closeSocket() {
+        try {
+            socket.close();
+        } catch (IOException error) {
+            System.err.println("Error closing the socket");
+        }
     }
 
     /**
@@ -103,7 +145,8 @@ public class MatrixCalculatorClient extends Application {
         imagePane.setId("imagePane");
 
         // get image from path, stored in src/main/images
-        Image matrixImage = new Image(getClass().getResource("..\\images\\matrix.png").toExternalForm());
+        //Image matrixImage = new Image(getClass().getResource("..\\images\\matrix.png").toExternalForm());
+        Image matrixImage = new Image(new File(System.getProperty("user.dir") + "/src/main/images/matrix.png").toURI().toString());
 
         // add image to imagePane, add imagePane to welcomePane
         ImageView matrixImageView = new ImageView(matrixImage);
@@ -286,7 +329,11 @@ public class MatrixCalculatorClient extends Application {
         calculateButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                double matrixArray[][] = new double[numRows][numColumns];
+                connectToServer();
+
+                networkOutput.println("GAUSSJORD " + stringedNumRows + " " + stringedNumColumns);
+
+                //double matrixArray[][] = new double[numRows][numColumns];
                 int i = 0;
                 int j = 0;
 
@@ -296,7 +343,8 @@ public class MatrixCalculatorClient extends Application {
                     }
 
                     try {
-                        matrixArray[i][j] = Double.parseDouble(((TextField) field).getText());
+                        networkOutput.println(((TextField) field).getText());
+                        //matrixArray[i][j] = Double.parseDouble(((TextField) field).getText());
                         j++;
 
                         if (j == numColumns) {
@@ -307,9 +355,21 @@ public class MatrixCalculatorClient extends Application {
                     }
                 }
 
-                Matrix matrix = new Matrix(matrixArray);
-                Matrix solvedMatrix = GaussJordan.solve(matrix);
+                //Matrix matrix = new Matrix(matrixArray);
+                //Matrix solvedMatrix = GaussJordan.solve(matrix);
 
+                String solution = "";
+                try {
+                    String line;
+                    //solution = networkInput.readLine();
+                    while ((line = networkInput.readLine()) != null) {
+                        solution += line + "\n";
+                    }
+                } catch (IOException error) {
+                    System.err.println("Problem reading solution from server");
+                }
+
+                closeSocket();
                 // display solution
                 /*
                 for (int row = 0; i < solvedMatrix.getRowSize(); row++) {
@@ -335,13 +395,18 @@ public class MatrixCalculatorClient extends Application {
                 state.setText(solvedMatrix.getState());
                 holdTable.add(state, 30, 30); */
 
+
+
+
+
                 //Text solution = new Text();
                 //solution.setText(solvedMatrix.getSolution());
                 //matrixTable.add(solution, numColumns + 4, numRows + 4);
                 //solution = solvedMatrix.getSolution();
-                String solution = solvedMatrix.getSolution();
+                //String solution = solvedMatrix.getSolution();
 
                 Text solutionText = new Text();
+                solutionText.setId("matrixDimText");
                 solutionText.setText(solution);
                 solutionPane.setLeft(solutionText);
             }

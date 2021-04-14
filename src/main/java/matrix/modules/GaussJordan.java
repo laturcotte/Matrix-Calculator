@@ -9,25 +9,22 @@ package main.java.matrix.modules;
 //import java.util.Scanner;
 import main.java.matrix.Matrix;
 
-// TODO: proper step process (decide what warrants a step and what doesn't, implement)
-// TODO: have all math.round stuff in one function
-// TODO: refactor getInfiniteExpression
-
+/**
+ * Calculates the Gauss-Jordan method for a matrix.
+ * Reduces to RREF, solves linear system.
+ *
+ * @author Liam Turcotte
+ */
 public class GaussJordan {
     private static Matrix matrix;
     private static int numRows;
     private static int numColumns;
 
-    /*
-    public static void main(String[] args) {
-        double defaultMatrix[][] = {{1, 3, -2, 1, 1}, {2, 4, -2, -1, 5}, {0, 3, -3, 6, 9}};
-        //double defaultMatrix[][] = {{1, -1, 2, -1, -1}, {2, 1, -2, -2, -2}, {-1, 2, -4, 1, 1}, {3, 0, 0, -3, -3}};
-        matrix = new Matrix(defaultMatrix);
-        numRows = matrix.getRowSize();
-        numColumns = matrix.getColSize();
-
-        conductGaussJordan();
-    } */
+    /**
+     * Main solve method
+     * @param matrixEntered initial matrix
+     * @return solved matrix
+     */
     public static Matrix solve(Matrix matrixEntered) {
         matrix = matrixEntered;
         numRows = matrix.getRowSize();
@@ -37,23 +34,26 @@ public class GaussJordan {
         return matrix;
     }
 
+    /**
+     * main calculating function
+     */
     private static void conductGaussJordan() {
         int stepNum = 1; // used to count steps
 
         // iterate for all rows
         for (int i = 0; i < numRows; i++) {
             // pivot
-            System.out.println("\nStep " + stepNum + ": create pivot in row " + (i+1) + ". ");
+            //System.out.println("\nStep " + stepNum + ": create pivot in row " + (i+1) + ". ");
             ensureFirstNonZeroEntry(i);
-            System.out.println(matrix);
+            //System.out.println(matrix);
             stepNum++;
 
             // prepare rows for elementary ops
-            System.out.print("\nStep " + stepNum + ": ensure that all entries in column " + (i+1));
-            System.out.println(" are either zeros or ones for elementary operations");
-            System.out.println("I: " + i);
+            //System.out.print("\nStep " + stepNum + ": ensure that all entries in column " + (i+1));
+            //System.out.println(" are either zeros or ones for elementary operations");
+            //System.out.println("I: " + i);
             createOnesInColumn(i, i);
-            System.out.println(matrix);
+            //System.out.println(matrix);
             stepNum++;
 
             // create 0s underneath the leading 1
@@ -62,9 +62,9 @@ public class GaussJordan {
             // since we can assume each row will either have a 0 or 1 in current column, it's simply a subtraction
             for (int j = i + 1; j < numRows; j++) {
                 if (matrix.getEntryAt(j, i) != 0) {
-                    System.out.print("\nStep " + stepNum + ": ");
+                    //System.out.print("\nStep " + stepNum + ": ");
                     twoRowOperation(j, i, 1, 1);
-                    System.out.println(matrix);
+                    //System.out.println(matrix);
                     stepNum++;
                 }
             }
@@ -72,9 +72,9 @@ public class GaussJordan {
             // also create 0s above the leading 1
             for (int j = i - 1; j >= 0; j--) {
                 if (matrix.getEntryAt(j, i) != 0) {
-                    System.out.print("\nStep " + stepNum + ": ");
+                    //System.out.print("\nStep " + stepNum + ": ");
                     twoRowOperation(j, i, 1, 1);
-                    System.out.println(matrix);
+                    //System.out.println(matrix);
                     stepNum++;
                 }
             }
@@ -84,7 +84,7 @@ public class GaussJordan {
 
         // cleanup; make sure first entry of every row is leading 1
         for (int i = 0; i < numRows; i++) {
-            System.out.println("\nStep " + stepNum + ": ensure leading 1 in row " + (i+1));
+            //System.out.println("\nStep " + stepNum + ": ensure leading 1 in row " + (i+1));
             ensureLeadingOne(i);
             correctIntValues();
             stepNum++;
@@ -95,14 +95,14 @@ public class GaussJordan {
         // value (don't need to check it's 1, can assume (or check lol)), check all entries in that column.
         // START FROM LAST ROW
         for (int i = numRows - 1; i >= 0; i--) {
-            System.out.println("\nStep " + stepNum + ": ensure no other non-zero entries in same column as leading 1 in row " + (i+1));
+            //System.out.println("\nStep " + stepNum + ": ensure no other non-zero entries in same column as leading 1 in row " + (i+1));
             cleanUpColumns(i);
             correctIntValues();
-            System.out.println(matrix);
+            //System.out.println(matrix);
             stepNum++;
         }
 
-        System.out.println("System is now in reduced row echelon form."); // no need to check, for sure good
+        //System.out.println("System is now in reduced row echelon form."); // no need to check, for sure good
         matrix.setState("System is now in reduced row echelon form.");
 
         // check if system is consistent or not, provide solution
@@ -134,7 +134,7 @@ public class GaussJordan {
         for (int i = rowIndex + 1; i < numRows; i++) {
             if (matrix.getEntryAt(i, rowIndex) != 0) {
                 // swap with current row
-                System.out.println("Swap row " + rowIndex + " with row " + i + " to have a pivot");
+                //System.out.println("Swap row " + rowIndex + " with row " + i + " to have a pivot");
                 matrix.swapRows(i, rowIndex);
                 return;
             }
@@ -171,7 +171,7 @@ public class GaussJordan {
     private static void twoRowOperation(int receiverRow, int giverRow, double receiverVal, double giverVal) {
         // receiver gets changed by giver
         // ex. form R2: 3*R2 - 2*R1 -> values in R2 after operation are 3*R2 before op minus 2*R1 vals
-        System.out.println("Elementary operation: row " + (receiverRow+1) + ": row " + (receiverRow+1) + " - row " + (giverRow+1));
+        //System.out.println("Elementary operation: row " + (receiverRow+1) + ": row " + (receiverRow+1) + " - row " + (giverRow+1));
 
         // hold the values of receiver row with constant multiplied, do the same with giver
         double receiverWithOp[] = new double[numColumns];
@@ -272,7 +272,7 @@ public class GaussJordan {
             if (zeroCount == numColumns - 1) {
                 // if last entry of row is not 0, then there are 0 solutions
                 if (matrix.getEntryAt(i, numColumns - 1) != 0.0) {
-                    System.out.println("The system is inconsistent; there are zero solutions.");
+                    //System.out.println("The system is inconsistent; there are zero solutions.");
                     matrix.setState(matrix.getState() + "\nThe system is inconsistent; there are zero solutions.");
                     return true;
                 }
@@ -295,7 +295,7 @@ public class GaussJordan {
 
         // more variables than equations
         if ((numColumns - 1) > numRows) {
-            System.out.println("System is consistent with infinite solutions.");
+            //System.out.println("System is consistent with infinite solutions.");
             matrix.setState(matrix.getState() + "\nSystem is consistent with infinite solutions.");
             return true;
         }
@@ -311,7 +311,7 @@ public class GaussJordan {
 
             if (zeroCount == numColumns) {
                 // infinite solutions
-                System.out.println("System is consistent with infinite solutions.");
+                //System.out.println("System is consistent with infinite solutions.");
                 matrix.setState(matrix.getState() + "\nSystem is consistent with infinite solutions.");
                 return true;
             }
@@ -330,7 +330,7 @@ public class GaussJordan {
         // there might be zero rows below (if more rows than variables), so break if got all variables
         double difference = 0;
 
-        System.out.println("System has a unique solution:");
+        //System.out.println("System has a unique solution:");
         matrix.setState(matrix.getState() + "\nSystem has a unique solution:");
         for (int i = 0; i < numRows; i++) {
             if (i >= numColumns - 1) {
@@ -340,11 +340,11 @@ public class GaussJordan {
             if (difference > -0.000000001 && difference < 0.000000001) {
                 // number is an integer, convert to int/long to remove .0 decimal
                 // f. ex. -1.0 becomes -1
-                System.out.println("x" + (i+1) + ": " + Math.round(matrix.getEntryAt(i, numColumns-1)));
+                //System.out.println("x" + (i+1) + ": " + Math.round(matrix.getEntryAt(i, numColumns-1)));
                 matrix.setSolution(matrix.getSolution() + "x" + (i+1) + ": " + Math.round(matrix.getEntryAt(i, numColumns-1)) + "\n");
             }
             else {
-                System.out.println("x" + (i+1) + ": " + matrix.getEntryAt(i, numColumns-1));
+                //System.out.println("x" + (i+1) + ": " + matrix.getEntryAt(i, numColumns-1));
                 matrix.setSolution(matrix.getSolution() + "x" + (i+1) + ": " + matrix.getEntryAt(i, numColumns-1) + "\n");
             }
         }
@@ -385,7 +385,7 @@ public class GaussJordan {
                 definedVariableExpressions[i] = getInfiniteExpression(rowNum, i);
             }
             else {
-                System.out.println("x" + (i+1) + ": free");
+                //System.out.println("x" + (i+1) + ": free");
                 matrix.setSolution(matrix.getSolution() + "x" + (i+1) + ": free" + "\n");
             }
         }
@@ -393,7 +393,7 @@ public class GaussJordan {
         // display defined variables
         for (int i = 0; i < variables.length; i++) {
             if (variables[i]) {
-                System.out.println(definedVariableExpressions[i]);
+                //System.out.println(definedVariableExpressions[i]);
                 matrix.setSolution(matrix.getSolution() + definedVariableExpressions[i] + "\n");
             }
         }
