@@ -1,0 +1,40 @@
+#welcomeTitle{
+    -fx-font-family: 'Rockwell';
+    -fx-fill: black;
+    -fx-font-size: 35px;
+    -fx-font-weight: bold;
+    white-space:normal;
+}
+
+#button {
+    -fx-background-color: black;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 30, 0.0, 0, 1);
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+#moduleTitle{
+    -fx-font-family: 'Rockwell';
+    -fx-fill: black;
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+}
+
+#descriptionText {
+    -fx-font-family: "Times New Roman";
+    -fx-font-size: 20px;
+    -fx-font-style: italic;
+}
+
+#matrixDimText{
+    -fx-font-family: 'Rockwell';
+    -fx-fill: black;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+#calculateButton {
+    -fx-background-color: navy;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
