@@ -113,12 +113,15 @@ public class MatrixCalculatorThread extends Thread {
             for (int i = 0; i < arrayMatrix.length; i++) {
                 for (int j = 0; j < arrayMatrix[i].length; i++) {
 
+                    // We wait for the client to send each member of the matrix
+                    // One entry at a time, row by row
                     try {
                         inContent = in.readLine();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
 
+                    // We make sure that the client sent something
                     if (null == inContent) {
                         out.println("400 no number provided");
                         return true;
@@ -129,6 +132,7 @@ public class MatrixCalculatorThread extends Thread {
                 }
             }
 
+            // We return the solution of the linear system
             Matrix solvedMatrix = GaussJordan.solve(new Matrix(arrayMatrix));
             out.println(solvedMatrix.getSolution());
             /*
@@ -161,6 +165,8 @@ public class MatrixCalculatorThread extends Thread {
             for (int i = 0; i < arrayMatrix.length; i++) {
                 for (int j = 0; j < arrayMatrix[i].length; i++) {
 
+                    // We wait for the client to send each member of the matrix
+                    // One entry at a time, row by row
                     try {
                         inContent = in.readLine();
                     } catch (IOException e) {
@@ -172,13 +178,16 @@ public class MatrixCalculatorThread extends Thread {
                         return true;
                     }
 
+                    // We make sure that the client sent something
                     arrayMatrix[i][j] = Double.parseDouble(inContent);
 
                 }
             }
 
+            // We apply the scalar multiplication
             Matrix outMatrix = ScalarMultiplication.scalarMultiplication(new Matrix(arrayMatrix), scalar);
-
+            
+            // We return the elements of the matrix
             for (int i = 0; i < outMatrix.getRowSize(); i++) {
                 for (int j = 0; j < outMatrix.getColSize(); j++) {
                     out.println(outMatrix.getEntryAt(i, j));
@@ -187,7 +196,56 @@ public class MatrixCalculatorThread extends Thread {
 
             return true;
 
-        } else {
+        } else if (command.equalsIgnoreCase("TRANSPOSE")) {
+            
+            String[] dim = arguments.split(" ");
+            double[][] arrayMatrix = null;
+
+            // We get and set the size of the matrix
+            if (dim.length == 2) {
+                arrayMatrix = new double[Integer.parseInt(dim[0])][Integer.parseInt(dim[1])];
+            } else {
+                out.println("400 Not enough arguments provided");
+                return true;
+            }
+
+            String inContent = null;
+            // We fill the matrix
+            for (int i = 0; i < arrayMatrix.length; i++) {
+                for (int j = 0; j < arrayMatrix[i].length; i++) {
+
+                    // We wait for the client to send each member of the matrix
+                    // One entry at a time, row by row
+                    try {
+                        inContent = in.readLine();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    // We make sure that the client sent something
+                    if (null == inContent) {
+                        out.println("400 no number provided");
+                        return true;
+                    }
+
+                    arrayMatrix[i][j] = Double.parseDouble(inContent);
+
+                }
+            }
+
+            // We compute the transpose the matrix
+            Matrix outMatrix = Transpose.transpose(new Matrix(arrayMatrix));
+            
+            // We return the elements of the matrix
+            for (int i = 0; i < outMatrix.getRowSize(); i++) {
+                for (int j = 0; j < outMatrix.getColSize(); j++) {
+                    out.println(outMatrix.getEntryAt(i, j));
+                }
+            } 
+
+            return true;
+
+        }else {
 
             // We send out an error message if the command is unrecognized
             out.println("400 Unrecognized Command: " + command);
