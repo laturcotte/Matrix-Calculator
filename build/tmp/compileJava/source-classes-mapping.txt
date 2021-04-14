@@ -1,0 +1,12 @@
+matrix/modules/Transpose.java
+ main.java.matrix.modules.Transpose
+MatrixCalculatorThread.java
+ main.java.MatrixCalculatorThread
+matrix/modules/GaussJordan.java
+ main.java.matrix.modules.GaussJordan
+matrix/modules/ScalarMultiplication.java
+ main.java.matrix.modules.ScalarMultiplication
+MatrixCalculatorServer.java
+ main.java.MatrixCalculatorServer
+matrix/Matrix.java
+ main.java.matrix.Matrix
