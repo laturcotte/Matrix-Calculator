@@ -32,6 +32,9 @@ public class MatrixCalculatorThread extends Thread {
 
     }
 
+    /**
+     * Run is the method giving a thread the tasks it needs to do
+     */
     public void run() {
 
         boolean endOfSession = false;

@@ -12,6 +12,9 @@ public class MatrixCalculatorServer {
     public static int SERVER_PORT = 41411;
     public static int MAX_CLIENTS = 100;
 
+    /**
+     * Constructor that starts the server
+     */
     public MatrixCalculatorServer() {
 
         try {
