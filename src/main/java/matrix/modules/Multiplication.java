@@ -22,7 +22,7 @@ public class Multiplication {
         int rowSize = matrix1.getRowSize();
         int colSize = matrix2.getColSize();
         int midSize = matrix1.getColSize();
-        int curVal;
+        double curVal;
 
         Matrix matrixOut = new Matrix(rowSize, colSize, true);
 
