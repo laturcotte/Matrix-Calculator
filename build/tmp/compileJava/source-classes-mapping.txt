@@ -8,10 +8,10 @@ MatrixCalculatorThread.java
  main.java.MatrixCalculatorThread
 matrix/modules/GaussJordan.java
  main.java.matrix.modules.GaussJordan
-MatrixCalculatorServer.java
- main.java.MatrixCalculatorServer
 MatrixCalculatorClient.java
  main.java.MatrixCalculatorClient
  main.java.MatrixCalculatorClient$1
  main.java.MatrixCalculatorClient$2
  main.java.MatrixCalculatorClient$3
+MatrixCalculatorServer.java
+ main.java.MatrixCalculatorServer
