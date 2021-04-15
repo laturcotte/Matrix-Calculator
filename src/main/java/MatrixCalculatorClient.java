@@ -283,20 +283,25 @@ public class MatrixCalculatorClient extends Application {
         modulePane.getTabs().add(gaussTab);
     }
 
-    // TODO: generalize this function so it can be used to make matrices for any module
-    // need to take into account module name, allowed matrix sizes, (how many matrices)
-    // another function for 2 matrix operations? like mul, add
+    /**
+     * Displays the Gauss-Jordan calculator window.
+     * The user enters their matrix here
+     * @param box1 choice box with number of rows
+     * @param box2 choice box with number of columns
+     */
     public void displayGaussJordanMatrixStage(ChoiceBox<String> box1, ChoiceBox<String> box2) {
-        // get the row/
+        // get the row/column values
         String stringedNumRows = box1.getValue();
         String stringedNumColumns = box2.getValue();
 
-        //
+        // convert them to int
         int numRows = Integer.parseInt(stringedNumRows);
         int numColumns = Integer.parseInt(stringedNumColumns);
 
+        // matrixpane will store all of the elements in the scene
         BorderPane matrixPane = new BorderPane();
 
+        // initialize the enter matrix message
         BorderPane topPane = new BorderPane();
         topPane.setPadding(new Insets(10, 10, 10, 10));
         Label enterMatrixLabel = new Label("Please enter the matrix.");
@@ -308,6 +313,8 @@ public class MatrixCalculatorClient extends Application {
         matrixTable.setPadding(new Insets(10, 10, 10, 10));
 
         // create text fields so user can input entries
+        // in other words, create the matrix
+        // use row/col chosen by user
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numColumns; j++) {
                 TextField field = new TextField();
@@ -315,13 +322,11 @@ public class MatrixCalculatorClient extends Application {
                 field.setPrefHeight(40);
                 field.setEditable(true);
 
-                //matrixTable.setRowIndex(field, i);
-                //matrixTable.setColumnIndex(field, j);
-                //matrixTable.getChildren().add(field);
                 matrixTable.add(field, j, i);
             }
         }
 
+        // Button which will initiate contact with the server when clicked
         Button calculateButton = new Button("Calculate Gauss-Jordan");
         calculateButton.setId("calculateButton");
         BorderPane solutionPane = new BorderPane();
@@ -329,14 +334,14 @@ public class MatrixCalculatorClient extends Application {
         calculateButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                // connect to the server to issue command
                 connectToServer();
-
                 networkOutput.println("GAUSSJORD " + stringedNumRows + " " + stringedNumColumns);
 
-                //double matrixArray[][] = new double[numRows][numColumns];
+                // get all elements in the matrix, send them to the server
+                // server is reading after the command
                 int i = 0;
                 int j = 0;
-
                 for (Node field: matrixTable.getChildren()) {
                     if (i >= numRows) {
                         break;
@@ -344,7 +349,6 @@ public class MatrixCalculatorClient extends Application {
 
                     try {
                         networkOutput.println(((TextField) field).getText());
-                        //matrixArray[i][j] = Double.parseDouble(((TextField) field).getText());
                         j++;
 
                         if (j == numColumns) {
@@ -352,16 +356,15 @@ public class MatrixCalculatorClient extends Application {
                             j = 0;
                         }
                     } catch (ClassCastException e) {
+                        System.err.println("Problem casting matrix");
                     }
                 }
 
-                //Matrix matrix = new Matrix(matrixArray);
-                //Matrix solvedMatrix = GaussJordan.solve(matrix);
-
+                // get the response from the server, which is the solution
                 String solution = "";
                 try {
                     String line;
-                    //solution = networkInput.readLine();
+
                     while ((line = networkInput.readLine()) != null) {
                         solution += line + "\n";
                     }
@@ -370,41 +373,8 @@ public class MatrixCalculatorClient extends Application {
                 }
 
                 closeSocket();
+
                 // display solution
-                /*
-                for (int row = 0; i < solvedMatrix.getRowSize(); row++) {
-                    for (int col = 0; j < solvedMatrix.getColSize(); col++) {
-                        TextField field = new TextField();
-                        field.setPrefWidth(40);
-                        field.setPrefHeight(40);
-                        field.setText(String.valueOf(solvedMatrix.getEntryAt(row, col)));
-                        field.setEditable(false);
-
-                        //holdTable.setRowIndex(field, row + i);
-                        //holdTable.setColumnIndex(field, col + j);
-                        holdTable.add(field, row+i, col+j);
-                        //holdTable.getChildren().add(field);
-                    }
-                } */
-
-                // display state and solution. check if solution is empty string (if it is, don't display)
-                //System.out.println("\n\n");
-                //System.out.println(solvedMatrix.getState());
-                //System.out.println(solvedMatrix.getSolution());
-                /*Text state = new Text();
-                state.setText(solvedMatrix.getState());
-                holdTable.add(state, 30, 30); */
-
-
-
-
-
-                //Text solution = new Text();
-                //solution.setText(solvedMatrix.getSolution());
-                //matrixTable.add(solution, numColumns + 4, numRows + 4);
-                //solution = solvedMatrix.getSolution();
-                //String solution = solvedMatrix.getSolution();
-
                 Text solutionText = new Text();
                 solutionText.setId("matrixDimText");
                 solutionText.setText(solution);
@@ -412,6 +382,7 @@ public class MatrixCalculatorClient extends Application {
             }
         });
 
+        // add button
         matrixTable.add(calculateButton, numColumns+3, numRows+3);
 
         matrixPane.setCenter(matrixTable);
@@ -420,6 +391,7 @@ public class MatrixCalculatorClient extends Application {
         Stage tableMatrix = new Stage();
         tableMatrix.setTitle("Gauss-Jordan solver: Please enter matrix");
 
+        // display this scene
         Scene matrixScene = new Scene(matrixPane, 500, 600);
         matrixScene.getStylesheets().add(pathToStyleSheet);
         tableMatrix.setScene(matrixScene);

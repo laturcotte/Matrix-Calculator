@@ -1,6 +1,6 @@
 /**
  * Matrix toolbox
- * 
+ *
  * Authors: Liam Turcotte, Samuel Bazinet
  * Last modification: February 15 2021
  */
@@ -13,6 +13,9 @@ public class Matrix {
     private double matrix[][];
     private int row;
     private int col;
+
+    private String state = "";
+    private String solution = "";
 
     /**
      * Constructor for Matrix class that lets the user input the elements <p>
@@ -79,8 +82,37 @@ public class Matrix {
     }
 
     /**
+     * Author: Liam Turcotte
+     * @param state
+     */
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    /**
+     * Author: Liam Turcotte
+     */
+    public void setSolution(String solution) {
+        this.solution = solution;
+    }
+
+    /**
+     * Author: Liam Turcotte
+     */
+    public String getState() {
+        return this.state;
+    }
+
+    /**
+     * Author: Liam Turcotte
+     */
+    public String getSolution() {
+        return this.solution;
+    }
+
+    /**
      * Change the content of one of the entries of the matrix <p>
-     * Author: Samuel Bazinet 
+     * Author: Samuel Bazinet
      * @param rowIndex
      * @param colIndex
      * @param newEntry
@@ -208,20 +240,20 @@ public class Matrix {
      * @return
      */
     public String toString() {
-        /*
-        String out = "[";
-        for (int i = 0; i < row; i++) {
-            out += "[ ";
-            for (int j = 0; j < col; j++) {
-                out += this.getEntryAt(i, j) + " ";
+            /*
+            String out = "[";
+            for (int i = 0; i < row; i++) {
+                out += "[ ";
+                for (int j = 0; j < col; j++) {
+                    out += this.getEntryAt(i, j) + " ";
+                }
+                out += "]";
+                if (i != row -1) {
+                    out += "\n";
+                }
             }
             out += "]";
-            if (i != row -1) {
-                out += "\n";
-            } 
-        }
-        out += "]";
-        return out; */
+            return out; */
         String out = "";
         double difference = 0.0;
 
