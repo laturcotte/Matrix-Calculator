@@ -326,11 +326,13 @@ public class MatrixCalculatorThread extends Thread {
             String[] dim = arguments.split(" ");
             double[][] arrayMatrix1 = null;
             double[][] arrayMatrix2 = null;
+            boolean add;
 
             // We get and set the size of the matrices
-            if (dim.length == 4) {
+            if (dim.length == 3) {
                 arrayMatrix1 = new double[Integer.parseInt(dim[0])][Integer.parseInt(dim[1])];
-                arrayMatrix2 = new double[Integer.parseInt(dim[2])][Integer.parseInt(dim[3])];
+                arrayMatrix2 = new double[Integer.parseInt(dim[0])][Integer.parseInt(dim[1])];
+                add = Boolean.parseBoolean(dim[2]);
             } else {
                 out.println("400 Not right amount of argument provided");
                 return true;
@@ -383,8 +385,12 @@ public class MatrixCalculatorThread extends Thread {
             }
 
             // We compute the transpose the matrix
-            Matrix outMatrix = Addition.Add(new Matrix(arrayMatrix1), new Matrix(arrayMatrix2));
-
+            Matrix outMatrix;
+            if (add) {
+                outMatrix = Addition.Add(new Matrix(arrayMatrix1), new Matrix(arrayMatrix2));
+            } else {
+                outMatrix = Addition.Sub(new Matrix(arrayMatrix1), new Matrix(arrayMatrix2));
+            }
             // We return the elements of the matrix
             for (int i = 0; i < outMatrix.getRowSize(); i++) {
                 for (int j = 0; j < outMatrix.getColSize(); j++) {

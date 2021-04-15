@@ -28,7 +28,7 @@ import java.net.Socket;
  * The client is connected to the server by a specific thread & socket.
  * the client connects/disconnects from the server every time a command is entered.
  *
- * @author Liam Turcotte
+ * @author Liam Turcotte and Guillaume Flores
  */
 public class MatrixCalculatorClient extends Application {
     // for reading/writing to the server through the socket
@@ -52,11 +52,6 @@ public class MatrixCalculatorClient extends Application {
     private TabPane modulePane;
 
     // path to style sheet to customize elements
-    //String pathToStyleSheet = getClass().getResource("..\\css\\stylingelements.css").toExternalForm();
-    //String pathToStyleSheet = getClass().getResource(".\\src\\main\\css\\stylingelements.css").toExternalForm();
-    //String pathToStyleSheet = "file:\\" + System.getProperty("user.dir") + "\\src\\main\\css\\stylingelements.css";
-    //String pathToStyleSheet = getClass().getResource(System.getProperty("user.dir") + "\\src\\main\\css\\stylingelements.css").toExternalForm();
-    //String pathToStyleSheet = new File(System.getProperty("user.dir") + "/src/main/images/matrix.png").toURI().toString();
     String pathToStyleSheet = "file:/" + System.getProperty("user.dir").replace("\\", "/") + "/src/main/css/stylingelements.css";
 
     @Override
@@ -77,6 +72,9 @@ public class MatrixCalculatorClient extends Application {
 
         // create multiplication tab
         initializeMultTab();
+
+        // create addition tab
+        initializeAddTab();
 
         // set the main scene
         mainPane.setCenter(modulePane);
@@ -195,9 +193,14 @@ public class MatrixCalculatorClient extends Application {
         Label gaussJordanLabel = new Label("Gauss Jordan:");
         Hyperlink gaussJordanWiki = new Hyperlink("https://en.wikipedia.org/wiki/Gaussian_elimination");
 
+        Label multLabel = new Label("Matrix multiplication:");
+        Hyperlink multWiki = new Hyperlink("https://en.wikipedia.org/wiki/Matrix_multiplication");
+
         // add label and link for each module
         linksPane.add(gaussJordanLabel, 1, 1);
         linksPane.add(gaussJordanWiki, 2, 1);
+        linksPane.add(multLabel, 1, 2);
+        linksPane.add(multWiki, 2, 2);
 
         // show the scene
         Scene linkScene = new Scene(linksPane, 400, 300);
@@ -287,7 +290,8 @@ public class MatrixCalculatorClient extends Application {
 
     /**
      * Displays the Gauss-Jordan calculator window.
-     * The user enters their matrix here
+     * The user enters their matrix here, then can click a calculate button to
+     * display the solution to the system.
      * @param box1 choice box with number of rows
      * @param box2 choice box with number of columns
      */
@@ -350,6 +354,7 @@ public class MatrixCalculatorClient extends Application {
                     }
 
                     try {
+                        // send current entry to server
                         networkOutput.println(((TextField) field).getText());
                         j++;
 
@@ -479,6 +484,8 @@ public class MatrixCalculatorClient extends Application {
         matrixSubmitButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                // when user clicks submit button, show the window where they
+                // can enter their matrices and find the solution
                 displayMultiplicationMatrixStage(box1, box2, box3, box4);
             }
         });
@@ -552,6 +559,7 @@ public class MatrixCalculatorClient extends Application {
             }
         }
 
+        // create X between matrices to show multiplication
         Label xLabel = new Label("X");
         xLabel.setId("bigX");
         matrixTable.add(xLabel, m1numColumns + 1, m1numRows/2);
@@ -564,7 +572,7 @@ public class MatrixCalculatorClient extends Application {
                 field.setPrefHeight(40);
                 field.setEditable(true);
 
-                matrixTable.add(field, j+4, i);
+                matrixTable.add(field, j+10, i);
             }
         }
 
@@ -609,6 +617,7 @@ public class MatrixCalculatorClient extends Application {
                     int m = 0;
                     int n = 0;
 
+                    // read in every entry of solution matrix from server
                     while ((line = networkInput.readLine()) != null) {
                         if (m > m1numRows) {
                             break;
@@ -638,6 +647,7 @@ public class MatrixCalculatorClient extends Application {
 
                 for (int index = 0; index < m1numRows; index++) {
                     for (int jndex = 0; jndex < m2numColumns; jndex++) {
+                        // display proper entry
                         TextField field = new TextField(String.valueOf(answerMatrix[index][jndex]));
                         field.setPrefWidth(40);
                         field.setPrefHeight(40);
@@ -652,7 +662,270 @@ public class MatrixCalculatorClient extends Application {
         });
 
         // add button
-        matrixTable.add(calculateButton, m1numRows + m2numRows + 3, m1numColumns +3);
+        matrixTable.add(calculateButton, m1numColumns + m2numColumns + 5, m1numRows +5);
+
+        matrixPane.setCenter(matrixTable);
+        matrixPane.setBottom(solutionPane);
+
+        Stage tableMatrix = new Stage();
+        tableMatrix.setTitle("Matrix multiplication: Please enter matrices");
+
+        // display this scene
+        Scene matrixScene = new Scene(matrixPane, 750, 600);
+        matrixScene.getStylesheets().add(pathToStyleSheet);
+        tableMatrix.setScene(matrixScene);
+        tableMatrix.show();
+    }
+
+    /**
+     * Creates the addition/substraction tab.
+     * User will be able to select their matrix size.
+     * Leads to the calculator window.
+     */
+    public void initializeAddTab() {
+        // create the addition screen
+        BorderPane addPane = new BorderPane();
+
+        // set the title at the top/center
+        BorderPane addTitlePane = new BorderPane();
+        addTitlePane.setPadding(new Insets(10, 10, 10, 10));
+        Label addLabel = new Label("Matrix Addition/Substraction calculator");
+        addLabel.setId("moduleTitle");
+        addTitlePane.setCenter(addLabel);
+
+        // show a short description about addition/substraction method
+        String message = "\n\nCalculates the sum or difference between "
+                + "two matrices.";
+        Text goalOfAdd = new Text(message);
+        goalOfAdd.setId("descriptionText");
+        addTitlePane.setBottom(goalOfAdd);
+        addPane.setTop(addTitlePane);
+
+        // set the matrix dimension pane in the center
+        GridPane addMatrixPane = new GridPane();
+        addMatrixPane.setAlignment(Pos.CENTER);
+        addMatrixPane.setHgap(10);
+        addMatrixPane.setVgap(10);
+        addMatrixPane.setPadding(new Insets(20, 20, 20, 20));
+
+        // instruction labels
+        Label firstInstructions = new Label("Please enter the dimension of the matrices:");
+        firstInstructions.setId("matrixDimText");
+        Label secondInstructions = new Label("Please choose addition or subtraction:");
+        secondInstructions.setId("matrixDimText");
+
+        // create first choice box to choose number of rows
+        ChoiceBox<String> box1 = new ChoiceBox<>();
+        box1.getItems().add("2");
+        box1.getItems().add("3");
+        box1.getItems().add("4");
+        box1.getItems().add("5");
+        box1.setValue("2"); // default/initial value
+
+        // create second choice box for number of columns
+        ChoiceBox<String> box2 = new ChoiceBox<>();
+        box2.getItems().add("2");
+        box2.getItems().add("3");
+        box2.getItems().add("4");
+        box2.getItems().add("5");
+        box2.setValue("2"); // default/initial value
+
+        // choose addition or subtraction
+        ChoiceBox<String> box3 = new ChoiceBox<>();
+        box3.getItems().add("Add");
+        box3.getItems().add("Sub");
+        box3.setValue("Add"); // default/initial value
+
+
+        // between choice boxes for aesthetics
+        Text xText = new Text("x");
+
+        // create submission button
+        Button matrixSubmitButton = new Button("Submit");
+        matrixSubmitButton.setId("button");
+        matrixSubmitButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                displayaddMatrixStage(box1, box2, box3);
+            }
+        });
+
+        // add all elements
+        addMatrixPane.add(firstInstructions, 0, 1);
+        addMatrixPane.add(box1, 1, 1);
+        addMatrixPane.add(xText, 2, 1);
+        addMatrixPane.add(box2, 3, 1);
+        addMatrixPane.add(secondInstructions, 0, 2);
+        addMatrixPane.add(box3, 1, 2);
+        addMatrixPane.add(matrixSubmitButton, 5, 4);
+
+        addPane.setCenter(addMatrixPane);
+
+        Tab addTab = new Tab("Addition/Substraction", addPane);
+        addTab.setClosable(false);
+        modulePane.getTabs().add(addTab);
+    }
+
+    /**
+     * Displays the addition/subtraction calculator window.
+     * The user enters their 2 matrices here
+     * @param numRowsBox num rows in matrix 1
+     * @param numColsBox num columns in matrix 1
+     * @param operand Add or Sub to know which to calculate
+     */
+    public void displayaddMatrixStage(ChoiceBox<String> numRowsBox, ChoiceBox<String> numColsBox,
+                                                ChoiceBox<String> operand) {
+        // get the row/column values
+        String rowStringed = numRowsBox.getValue();
+        String colStringed = numColsBox.getValue();
+
+        // convert them to int
+        int numRows = Integer.parseInt(rowStringed);
+        int numColumns = Integer.parseInt(colStringed);
+
+
+        // matrixpane will store all of the elements in the scene
+        BorderPane matrixPane = new BorderPane();
+
+        // initialize the enter matrix message
+        BorderPane topPane = new BorderPane();
+        topPane.setPadding(new Insets(10, 10, 10, 10));
+        Label enterMatrixLabel = new Label("Please enter the matrices.");
+        enterMatrixLabel.setId("matrixDimText");
+        topPane.setLeft(enterMatrixLabel);
+        matrixPane.setTop(topPane);
+
+        GridPane matrixTable = new GridPane();
+        matrixTable.setPadding(new Insets(10, 10, 10, 10));
+
+        // create text fields so user can input entries
+        // in other words, create the matrix
+        // use row/col chosen by user
+        // create first matrix
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numColumns; j++) {
+                TextField field = new TextField();
+                field.setPrefWidth(40);
+                field.setPrefHeight(40);
+                field.setEditable(true);
+
+                matrixTable.add(field, j, i);
+            }
+        }
+
+        // Show proper sign depending on if addition or subtraction
+        Label xLabel;
+        if (operand.getValue().equalsIgnoreCase("Add")) {
+            xLabel = new Label("+");
+        } else {
+            xLabel = new Label("-");
+        }
+        xLabel.setId("bigX");
+        matrixTable.add(xLabel, numColumns + 1, numRows/2);
+
+        // create second matrix a bit to the right
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numColumns; j++) {
+                TextField field = new TextField();
+                field.setPrefWidth(40);
+                field.setPrefHeight(40);
+                field.setEditable(true);
+
+                matrixTable.add(field, j+10, i);
+            }
+        }
+
+        // Button which will initiate contact with the server when clicked
+        Button calculateButton = new Button("Calculate Addition/Subtraction");
+        calculateButton.setId("calculateButton");
+        BorderPane solutionPane = new BorderPane();
+        solutionPane.setPadding(new Insets(10, 10, 10, 10));
+        calculateButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                // connect to the server to issue command
+                connectToServer();
+
+                if (operand.getValue().equals("Add")) {
+                    networkOutput.println("ADDITION " + numRows + " " + numColumns + " true");
+                } else {
+                    networkOutput.println("ADDITION " + numRows + " " + numColumns + " false");
+                }
+
+                // get all elements in matrix 1, send them to the server
+                // server is reading after the command
+                int k = 0;
+                int numElementsTotal = numRows * numColumns * 2;
+
+                // go through all elements, only sending those in textfields
+                for (Node field: matrixTable.getChildren()) {
+                    if (k > numElementsTotal) {
+                        break;
+                    }
+                    try {
+                        networkOutput.println(((TextField) field).getText());
+                    } catch (ClassCastException error) {
+                        continue;
+                    }
+                    k++;
+                }
+
+                // get the response from the server, which is the values of
+                // the solution matrix
+                double[][] answerMatrix = new double[numRows][numColumns];
+
+                try {
+                    String line;
+                    double currentElement;
+                    int m = 0;
+                    int n = 0;
+
+                    // read in every entry of solution matrix from server
+                    while ((line = networkInput.readLine()) != null) {
+                        if (m > numRows) {
+                            break;
+                        }
+
+                        currentElement = Double.parseDouble(line);
+                        answerMatrix[m][n] = currentElement;
+
+                        n++;
+
+                        if (n == numColumns) {
+                            m++;
+                            n = 0;
+                        }
+                    }
+                } catch (IOException error) {
+                    System.err.println("Problem reading solution from server");
+                }
+
+                closeSocket();
+
+                // display solution
+                GridPane matrixSolutionPane = new GridPane();
+                Label solTitle = new Label("Solution:");
+                solTitle.setId("matrixDimText");
+                matrixSolutionPane.add(solTitle, 0, 0);
+
+                for (int index = 0; index < numRows; index++) {
+                    for (int jndex = 0; jndex < numColumns; jndex++) {
+                        // display proper entry
+                        TextField field = new TextField(String.valueOf(answerMatrix[index][jndex]));
+                        field.setPrefWidth(40);
+                        field.setPrefHeight(40);
+                        field.setEditable(false);
+
+                        matrixSolutionPane.add(field, jndex + 1, index+2);
+                    }
+                }
+
+                solutionPane.setLeft(matrixSolutionPane);
+            }
+        });
+
+        // add button
+        matrixTable.add(calculateButton, numColumns*2 + 7, numRows * 2 + 5);
 
         matrixPane.setCenter(matrixTable);
         matrixPane.setBottom(solutionPane);
