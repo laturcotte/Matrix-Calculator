@@ -4,14 +4,17 @@ This is a Matrix calculation suite implementing the client/server architecture.
 The user can choose which operation to make on their matrix and the multi-threaded server will perfrom the calculations and return the results to the client.
 The client will connect to the server, the latter will perform the calculations and return them, then the client will disconnect from the server.
 
-The calculator suite can currently perform 6 operations:
+The calculator suite can currently perform 3 operations:
 
 1. Gauss-Jordan Linear Solving
-2. Matrix Pultiplication
-3. Matrix Power (multiplying a matrix by itself)
-4. Scalar Multiplication
-5. Matrix Addtion
-6. Matrix Transposition
+2. Matrix Addtion
+3. Matrix Multiplication
+
+With 3 more in the works:
+
+1. Matrix Power (multiplying a matrix by itself)
+2. Scalar Multiplication
+3. Matrix Transposition
 
 ## How to Run
 
