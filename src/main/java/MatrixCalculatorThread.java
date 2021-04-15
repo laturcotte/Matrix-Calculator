@@ -166,7 +166,7 @@ public class MatrixCalculatorThread extends Thread {
             String inContent = null;
             // We fill the matrix
             for (int i = 0; i < arrayMatrix.length; i++) {
-                for (int j = 0; j < arrayMatrix[i].length; i++) {
+                for (int j = 0; j < arrayMatrix[i].length; j++) {
 
                     // We wait for the client to send each member of the matrix
                     // One entry at a time, row by row
@@ -215,7 +215,7 @@ public class MatrixCalculatorThread extends Thread {
             String inContent = null;
             // We fill the matrix
             for (int i = 0; i < arrayMatrix.length; i++) {
-                for (int j = 0; j < arrayMatrix[i].length; i++) {
+                for (int j = 0; j < arrayMatrix[i].length; j++) {
 
                     // We wait for the client to send each member of the matrix
                     // One entry at a time, row by row
@@ -266,7 +266,7 @@ public class MatrixCalculatorThread extends Thread {
             String inContent = null;
             // We fill the matrix1
             for (int i = 0; i < arrayMatrix1.length; i++) {
-                for (int j = 0; j < arrayMatrix1[i].length; i++) {
+                for (int j = 0; j < arrayMatrix1[i].length; j++) {
 
                     // We wait for the client to send each member of the matrix
                     // One entry at a time, row by row
@@ -288,7 +288,7 @@ public class MatrixCalculatorThread extends Thread {
             }
             // We fill the matrix2
             for (int i = 0; i < arrayMatrix2.length; i++) {
-                for (int j = 0; j < arrayMatrix2[i].length; i++) {
+                for (int j = 0; j < arrayMatrix2[i].length; j++) {
 
                     // We wait for the client to send each member of the matrix
                     // One entry at a time, row by row
@@ -339,7 +339,7 @@ public class MatrixCalculatorThread extends Thread {
             String inContent = null;
             // We fill the matrix1
             for (int i = 0; i < arrayMatrix1.length; i++) {
-                for (int j = 0; j < arrayMatrix1[i].length; i++) {
+                for (int j = 0; j < arrayMatrix1[i].length; j++) {
 
                     // We wait for the client to send each member of the matrix
                     // One entry at a time, row by row
@@ -361,7 +361,7 @@ public class MatrixCalculatorThread extends Thread {
             }
             // We fill the matrix2
             for (int i = 0; i < arrayMatrix2.length; i++) {
-                for (int j = 0; j < arrayMatrix2[i].length; i++) {
+                for (int j = 0; j < arrayMatrix2[i].length; j++) {
 
                     // We wait for the client to send each member of the matrix
                     // One entry at a time, row by row
@@ -412,7 +412,7 @@ public class MatrixCalculatorThread extends Thread {
             String inContent = null;
             // We fill the matrix
             for (int i = 0; i < arrayMatrix.length; i++) {
-                for (int j = 0; j < arrayMatrix[i].length; i++) {
+                for (int j = 0; j < arrayMatrix[i].length; j++) {
 
                     // We wait for the client to send each member of the matrix
                     // One entry at a time, row by row
