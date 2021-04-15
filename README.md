@@ -16,6 +16,14 @@ With 3 more in the works:
 2. Scalar Multiplication
 3. Matrix Transposition
 
+## Screenshots of application
+
+![alt text](./src/main/images/welcome_screen.png?raw=true)
+![alt text](./src/main/imageswiki_image.png?raw=true)
+![alt text](./src/main/images/running_server.png?raw=true)
+![alt text](./src/main/images/running_substraction.png?raw=true)
+![alt text](./src/main/images/gauss_run.png?raw=true)
+
 ## How to Run
 
 1. Make sure that you have Gradle 6.8.1 installed on your machine.
