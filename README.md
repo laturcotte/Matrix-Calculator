@@ -26,6 +26,7 @@ The calculator suite can currently perform 6 operations:
 9. Follow the instructions given to you.
 
 
-## Resources Used
+## Resources and Libraries Used
 
-* JavaFX
+* JavaFX Library
+* Welcome Page Matrix Picture from https://subscription.packtpub.com/book/big_data_and_business_intelligence/9781788993357/1/ch01lvl1sec13/introduction-to-vectors-and-matrices
