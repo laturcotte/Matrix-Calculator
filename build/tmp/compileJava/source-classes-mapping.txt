@@ -1,7 +1,7 @@
 matrix/modules/Transpose.java
  main.java.matrix.modules.Transpose
-MatrixCalculatorThread.java
- main.java.MatrixCalculatorThread
+MatrixCalculatorServer.java
+ main.java.MatrixCalculatorServer
 matrix/modules/GaussJordan.java
  main.java.matrix.modules.GaussJordan
 matrix/modules/Addition.java
@@ -10,14 +10,16 @@ matrix/modules/Power.java
  main.java.matrix.modules.Power
 matrix/modules/ScalarMultiplication.java
  main.java.matrix.modules.ScalarMultiplication
-MatrixCalculatorServer.java
- main.java.MatrixCalculatorServer
-matrix/modules/Multiplication.java
- main.java.matrix.modules.Multiplication
 matrix/Matrix.java
  main.java.matrix.Matrix
+matrix/modules/Multiplication.java
+ main.java.matrix.modules.Multiplication
+MatrixCalculatorThread.java
+ main.java.MatrixCalculatorThread
 MatrixCalculatorClient.java
  main.java.MatrixCalculatorClient
  main.java.MatrixCalculatorClient$1
  main.java.MatrixCalculatorClient$2
  main.java.MatrixCalculatorClient$3
+ main.java.MatrixCalculatorClient$4
+ main.java.MatrixCalculatorClient$5

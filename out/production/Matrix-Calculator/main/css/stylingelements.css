@@ -20,6 +20,13 @@
     -fx-font-weight: bold;
 }
 
+#bigX{
+    -fx-font-family: 'Rockwell';
+    -fx-fill: black;
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+}
+
 #descriptionText {
     -fx-font-family: "Times New Roman";
     -fx-font-size: 20px;

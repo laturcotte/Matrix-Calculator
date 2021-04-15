@@ -61,7 +61,6 @@ public class MatrixCalculatorClient extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        System.out.println(pathToStyleSheet);
         // initialize main pane
         mainPane = new BorderPane();
         Scene mainScene = new Scene(mainPane, 900, 600);
@@ -75,6 +74,9 @@ public class MatrixCalculatorClient extends Application {
 
         // create Gauss Jordan tab
         initializeGaussJordanTab();
+
+        // create multiplication tab
+        initializeMultTab();
 
         // set the main scene
         mainPane.setCenter(modulePane);
@@ -393,6 +395,273 @@ public class MatrixCalculatorClient extends Application {
 
         // display this scene
         Scene matrixScene = new Scene(matrixPane, 500, 600);
+        matrixScene.getStylesheets().add(pathToStyleSheet);
+        tableMatrix.setScene(matrixScene);
+        tableMatrix.show();
+    }
+
+    /**
+     * Creates the Multiplication tab.
+     * User will be able to select their matrix size.
+     * Leads to the calculator window.
+     */
+    public void initializeMultTab() {
+        // create the multiplication screen
+        BorderPane multPane = new BorderPane();
+
+        // set the title at the top/center
+        BorderPane multTitlePane = new BorderPane();
+        multTitlePane.setPadding(new Insets(10, 10, 10, 10));
+        Label MultLabel = new Label("Matrix multiplication calculator");
+        MultLabel.setId("moduleTitle");
+        multTitlePane.setCenter(MultLabel);
+
+        // show a short description about muliplication method
+        String message = "\n\nCalculates the product between "
+                + "two matrices." + "\n NOTE : MATRICES MUST BE VALID";
+        Text goalOfMult = new Text(message);
+        goalOfMult.setId("descriptionText");
+        multTitlePane.setBottom(goalOfMult);
+        multPane.setTop(multTitlePane);
+
+        // set the matrix dimension pane in the center
+        GridPane multMatrixPane = new GridPane();
+        multMatrixPane.setAlignment(Pos.CENTER);
+        multMatrixPane.setHgap(10);
+        multMatrixPane.setVgap(10);
+        multMatrixPane.setPadding(new Insets(20, 20, 20, 20));
+
+        // instruction labels
+        Label firstMatrixInstructions = new Label("Please enter the first matrix dimension:");
+        firstMatrixInstructions.setId("matrixDimText");
+        Label secondMatrixInstructions = new Label("Please enter the second matrix dimension:");
+        secondMatrixInstructions.setId("matrixDimText");
+
+        // create first choice box to choose number of rows
+        ChoiceBox<String> box1 = new ChoiceBox<>();
+        box1.getItems().add("2");
+        box1.getItems().add("3");
+        box1.getItems().add("4");
+        box1.getItems().add("5");
+        box1.setValue("2"); // default/initial value
+
+        // create second choice box for number of columns
+        ChoiceBox<String> box2 = new ChoiceBox<>();
+        box2.getItems().add("2");
+        box2.getItems().add("3");
+        box2.getItems().add("4");
+        box2.getItems().add("5");
+        box2.setValue("2"); // default/initial value
+
+        // create third choice box to choose number of rows
+        ChoiceBox<String> box3 = new ChoiceBox<>();
+        box3.getItems().add("2");
+        box3.getItems().add("3");
+        box3.getItems().add("4");
+        box3.getItems().add("5");
+        box3.setValue("2"); // default/initial value
+
+        // create second choice box for number of columns
+        ChoiceBox<String> box4 = new ChoiceBox<>();
+        box4.getItems().add("2");
+        box4.getItems().add("3");
+        box4.getItems().add("4");
+        box4.getItems().add("5");
+        box4.setValue("2"); // default/initial value
+
+        // between choice boxes for aesthetics
+        Text xText = new Text("x");
+        Text x2Text = new Text("x");
+
+        // create submission button
+        Button matrixSubmitButton = new Button("Submit");
+        matrixSubmitButton.setId("button");
+        matrixSubmitButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                displayMultiplicationMatrixStage(box1, box2, box3, box4);
+            }
+        });
+
+        // add all elements
+        multMatrixPane.add(firstMatrixInstructions, 0, 1);
+        multMatrixPane.add(box1, 1, 1);
+        multMatrixPane.add(xText, 2, 1);
+        multMatrixPane.add(box2, 3, 1);
+        multMatrixPane.add(secondMatrixInstructions, 0, 2);
+        multMatrixPane.add(box3, 1, 2);
+        multMatrixPane.add(x2Text, 2, 2);
+        multMatrixPane.add(box4, 3, 2);
+        multMatrixPane.add(matrixSubmitButton, 5, 4);
+
+        multPane.setCenter(multMatrixPane);
+
+        Tab MultTab = new Tab("Multiplication", multPane);
+        MultTab.setClosable(false);
+        modulePane.getTabs().add(MultTab);
+    }
+
+    /**
+     * Displays the multiplication calculator window.
+     * The user enters their 2 matrices here
+     * @param matrix1row num rows in matrix 1
+     * @param matrix1col num columns in matrix 1
+     * @param matrix2row num rows in matrix 2
+     * @param matrix2col num columns in matrix 2
+     */
+    public void displayMultiplicationMatrixStage(ChoiceBox<String> matrix1row, ChoiceBox<String> matrix1col,
+                                                 ChoiceBox<String> matrix2row, ChoiceBox<String> matrix2col) {
+        // get the row/column values
+        String m1RowStringed = matrix1row.getValue();
+        String m1ColStringed = matrix1col.getValue();
+        String m2RowStringed = matrix2row.getValue();
+        String m2ColStringed = matrix2col.getValue();
+
+        // convert them to int
+        int m1numRows = Integer.parseInt(m1RowStringed);
+        int m1numColumns = Integer.parseInt(m1ColStringed);
+        int m2numRows = Integer.parseInt(m2RowStringed);
+        int m2numColumns = Integer.parseInt(m2ColStringed);
+
+        // matrixpane will store all of the elements in the scene
+        BorderPane matrixPane = new BorderPane();
+
+        // initialize the enter matrix message
+        BorderPane topPane = new BorderPane();
+        topPane.setPadding(new Insets(10, 10, 10, 10));
+        Label enterMatrixLabel = new Label("Please enter the matrices.");
+        enterMatrixLabel.setId("matrixDimText");
+        topPane.setLeft(enterMatrixLabel);
+        matrixPane.setTop(topPane);
+
+        GridPane matrixTable = new GridPane();
+        matrixTable.setPadding(new Insets(10, 10, 10, 10));
+
+        // create text fields so user can input entries
+        // in other words, create the matrix
+        // use row/col chosen by user
+        // create first matrix
+        for (int i = 0; i < m1numRows; i++) {
+            for (int j = 0; j < m1numColumns; j++) {
+                TextField field = new TextField();
+                field.setPrefWidth(40);
+                field.setPrefHeight(40);
+                field.setEditable(true);
+
+                matrixTable.add(field, j, i);
+            }
+        }
+
+        Label xLabel = new Label("X");
+        xLabel.setId("bigX");
+        matrixTable.add(xLabel, m1numColumns + 1, m1numRows/2);
+
+        // create second matrix a bit to the right
+        for (int i = 0; i < m2numRows; i++) {
+            for (int j = 0; j < m2numColumns; j++) {
+                TextField field = new TextField();
+                field.setPrefWidth(40);
+                field.setPrefHeight(40);
+                field.setEditable(true);
+
+                matrixTable.add(field, j+4, i);
+            }
+        }
+
+        // Button which will initiate contact with the server when clicked
+        Button calculateButton = new Button("Calculate Multiplication");
+        calculateButton.setId("calculateButton");
+        BorderPane solutionPane = new BorderPane();
+        solutionPane.setPadding(new Insets(10, 10, 10, 10));
+        calculateButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                // connect to the server to issue command
+                connectToServer();
+                networkOutput.println("MULTIPLICATION " + m1RowStringed + " " + m1ColStringed
+                                        + " " + m2RowStringed + " " + m2ColStringed);
+
+                // get all elements in matrix 1, send them to the server
+                // server is reading after the command
+                int k = 0;
+                int numElementsTotal = m1numRows * m1numColumns + m2numRows * m2numColumns;
+
+                // go through all elements, only sending those in textfields
+                for (Node field: matrixTable.getChildren()) {
+                    if (k > numElementsTotal) {
+                        break;
+                    }
+                    try {
+                        networkOutput.println(((TextField) field).getText());
+                    } catch (ClassCastException error) {
+                        continue;
+                    }
+                    k++;
+                }
+
+                // get the response from the server, which is the values of
+                // the solution matrix
+                double[][] answerMatrix = new double[m1numRows][m2numColumns];
+
+                try {
+                    String line;
+                    double currentElement;
+                    int m = 0;
+                    int n = 0;
+
+                    while ((line = networkInput.readLine()) != null) {
+                        if (m > m1numRows) {
+                            break;
+                        }
+
+                        currentElement = Double.parseDouble(line);
+                        answerMatrix[m][n] = currentElement;
+
+                        n++;
+
+                        if (n == m2numColumns) {
+                            m++;
+                            n = 0;
+                        }
+                    }
+                } catch (IOException error) {
+                    System.err.println("Problem reading solution from server");
+                }
+
+                closeSocket();
+
+                // display solution
+                GridPane matrixSolutionPane = new GridPane();
+                Label solTitle = new Label("Solution:");
+                solTitle.setId("matrixDimText");
+                matrixSolutionPane.add(solTitle, 0, 0);
+
+                for (int index = 0; index < m1numRows; index++) {
+                    for (int jndex = 0; jndex < m2numColumns; jndex++) {
+                        TextField field = new TextField(String.valueOf(answerMatrix[index][jndex]));
+                        field.setPrefWidth(40);
+                        field.setPrefHeight(40);
+                        field.setEditable(false);
+
+                        matrixSolutionPane.add(field, jndex + 1, index+2);
+                    }
+                }
+
+                solutionPane.setLeft(matrixSolutionPane);
+            }
+        });
+
+        // add button
+        matrixTable.add(calculateButton, m1numRows + m2numRows + 3, m1numColumns +3);
+
+        matrixPane.setCenter(matrixTable);
+        matrixPane.setBottom(solutionPane);
+
+        Stage tableMatrix = new Stage();
+        tableMatrix.setTitle("Matrix multiplication: Please enter matrices");
+
+        // display this scene
+        Scene matrixScene = new Scene(matrixPane, 750, 600);
         matrixScene.getStylesheets().add(pathToStyleSheet);
         tableMatrix.setScene(matrixScene);
         tableMatrix.show();
