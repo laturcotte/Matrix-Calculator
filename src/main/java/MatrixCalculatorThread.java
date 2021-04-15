@@ -107,7 +107,7 @@ public class MatrixCalculatorThread extends Thread {
             if (dim.length <= 2) {
                 arrayMatrix = new double[Integer.parseInt(dim[0])][Integer.parseInt(dim[1])];
             } else {
-                out.println("400 Not enough arguments provided");
+                out.println("400 Not right amount of argument provided");
                 return true;
             }
 
@@ -155,11 +155,11 @@ public class MatrixCalculatorThread extends Thread {
             double scalar = 0;
 
             // We get and set the size of the matrix
-            if (dim.length == 2) {
+            if (dim.length == 3) {
                 arrayMatrix = new double[Integer.parseInt(dim[0])][Integer.parseInt(dim[1])];
                 scalar = Double.parseDouble(dim[2]);
             } else {
-                out.println("400 Not enough arguments provided");
+                out.println("400 Not right amount of argument provided");
                 return true;
             }
 
@@ -208,7 +208,7 @@ public class MatrixCalculatorThread extends Thread {
             if (dim.length == 2) {
                 arrayMatrix = new double[Integer.parseInt(dim[0])][Integer.parseInt(dim[1])];
             } else {
-                out.println("400 Not enough arguments provided");
+                out.println("400 Not right amount of argument provided");
                 return true;
             }
 
@@ -248,7 +248,203 @@ public class MatrixCalculatorThread extends Thread {
 
             return true;
 
-        }else {
+        } else if (command.equalsIgnoreCase("MULTIPLICATION")) {
+
+            String[] dim = arguments.split(" ");
+            double[][] arrayMatrix1 = null;
+            double[][] arrayMatrix2 = null;
+
+            // We get and set the size of the matrices
+            if (dim.length == 4) {
+                arrayMatrix1 = new double[Integer.parseInt(dim[0])][Integer.parseInt(dim[1])];
+                arrayMatrix2 = new double[Integer.parseInt(dim[2])][Integer.parseInt(dim[3])];
+            } else {
+                out.println("400 Not right amount of argument provided");
+                return true;
+            }
+
+            String inContent = null;
+            // We fill the matrix1
+            for (int i = 0; i < arrayMatrix1.length; i++) {
+                for (int j = 0; j < arrayMatrix1[i].length; i++) {
+
+                    // We wait for the client to send each member of the matrix
+                    // One entry at a time, row by row
+                    try {
+                        inContent = in.readLine();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    // We make sure that the client sent something
+                    if (null == inContent) {
+                        out.println("400 no number provided");
+                        return true;
+                    }
+
+                    arrayMatrix1[i][j] = Double.parseDouble(inContent);
+
+                }
+            }
+            // We fill the matrix2
+            for (int i = 0; i < arrayMatrix2.length; i++) {
+                for (int j = 0; j < arrayMatrix2[i].length; i++) {
+
+                    // We wait for the client to send each member of the matrix
+                    // One entry at a time, row by row
+                    try {
+                        inContent = in.readLine();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    // We make sure that the client sent something
+                    if (null == inContent) {
+                        out.println("400 no number provided");
+                        return true;
+                    }
+
+                    arrayMatrix2[i][j] = Double.parseDouble(inContent);
+
+                }
+            }
+
+            // We compute the transpose the matrix
+            Matrix outMatrix = Multiplication.Multiply(new Matrix(arrayMatrix1), new Matrix(arrayMatrix2));
+            
+            // We return the elements of the matrix
+            for (int i = 0; i < outMatrix.getRowSize(); i++) {
+                for (int j = 0; j < outMatrix.getColSize(); j++) {
+                    out.println(outMatrix.getEntryAt(i, j));
+                }
+            } 
+
+            return true;
+
+        } else if (command.equalsIgnoreCase("ADDITION")) {
+
+            String[] dim = arguments.split(" ");
+            double[][] arrayMatrix1 = null;
+            double[][] arrayMatrix2 = null;
+
+            // We get and set the size of the matrices
+            if (dim.length == 4) {
+                arrayMatrix1 = new double[Integer.parseInt(dim[0])][Integer.parseInt(dim[1])];
+                arrayMatrix2 = new double[Integer.parseInt(dim[2])][Integer.parseInt(dim[3])];
+            } else {
+                out.println("400 Not right amount of argument provided");
+                return true;
+            }
+
+            String inContent = null;
+            // We fill the matrix1
+            for (int i = 0; i < arrayMatrix1.length; i++) {
+                for (int j = 0; j < arrayMatrix1[i].length; i++) {
+
+                    // We wait for the client to send each member of the matrix
+                    // One entry at a time, row by row
+                    try {
+                        inContent = in.readLine();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    // We make sure that the client sent something
+                    if (null == inContent) {
+                        out.println("400 no number provided");
+                        return true;
+                    }
+
+                    arrayMatrix1[i][j] = Double.parseDouble(inContent);
+
+                }
+            }
+            // We fill the matrix2
+            for (int i = 0; i < arrayMatrix2.length; i++) {
+                for (int j = 0; j < arrayMatrix2[i].length; i++) {
+
+                    // We wait for the client to send each member of the matrix
+                    // One entry at a time, row by row
+                    try {
+                        inContent = in.readLine();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    // We make sure that the client sent something
+                    if (null == inContent) {
+                        out.println("400 no number provided");
+                        return true;
+                    }
+
+                    arrayMatrix2[i][j] = Double.parseDouble(inContent);
+
+                }
+            }
+
+            // We compute the transpose the matrix
+            Matrix outMatrix = Addition.Add(new Matrix(arrayMatrix1), new Matrix(arrayMatrix2));
+            
+            // We return the elements of the matrix
+            for (int i = 0; i < outMatrix.getRowSize(); i++) {
+                for (int j = 0; j < outMatrix.getColSize(); j++) {
+                    out.println(outMatrix.getEntryAt(i, j));
+                }
+            } 
+
+            return true;
+
+        } else if (command.equalsIgnoreCase("POWER")) {
+
+            String[] dim = arguments.split(" ");
+            double[][] arrayMatrix = null;
+            int power = 0;
+
+            // We get and set the size of the matrix
+            if (dim.length == 3) {
+                arrayMatrix = new double[Integer.parseInt(dim[0])][Integer.parseInt(dim[1])];
+                power = Integer.parseInt(dim[2]);
+            } else {
+                out.println("400 Not right amount of argument provided");
+                return true;
+            }
+
+            String inContent = null;
+            // We fill the matrix
+            for (int i = 0; i < arrayMatrix.length; i++) {
+                for (int j = 0; j < arrayMatrix[i].length; i++) {
+
+                    // We wait for the client to send each member of the matrix
+                    // One entry at a time, row by row
+                    try {
+                        inContent = in.readLine();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (null == inContent) {
+                        out.println("400 no number provided");
+                        return true;
+                    }
+
+                    // We make sure that the client sent something
+                    arrayMatrix[i][j] = Double.parseDouble(inContent);
+
+                }
+            }
+
+            // We apply the scalar multiplication
+            Matrix outMatrix = Power.Power(new Matrix(arrayMatrix), power);
+            
+            // We return the elements of the matrix
+            for (int i = 0; i < outMatrix.getRowSize(); i++) {
+                for (int j = 0; j < outMatrix.getColSize(); j++) {
+                    out.println(outMatrix.getEntryAt(i, j));
+                }
+            } 
+
+            return true;
+        } else {
 
             // We send out an error message if the command is unrecognized
             out.println("400 Unrecognized Command: " + command);
